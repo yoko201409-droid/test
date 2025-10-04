@@ -6595,6 +6595,69 @@ window.application = new Application();
 </script>
 </head>
 <body>
+<button class="menu-btn" id="menuBtn" aria-label="メニューを開く">
+  <img id="menuBtnImg" src="images/menu-open.png" alt="メニュー" />
+</button>
+<div class="menu-overlay" id="menuOverlay"></div>
+<nav class="menu-drawer" id="menuDrawer" aria-label="メニュー">
+	<div class="menu-list">
+		<a class="menu-link menu-item" href="#">
+			<div class="menu-title">TOP</div>
+			<div class="menu-desc">トップページ</div>
+		</a>
+		<a class="menu-link menu-item" href="#">
+			<div class="menu-title">INFOMATION</div>
+			<div class="menu-desc">お知らせ</div>
+		</a>
+		<a class="menu-link menu-item" href="#">
+			<div class="menu-title">MEMBER</div>
+			<div class="menu-desc">参加選手一覧</div>
+		</a>
+		<a class="menu-link menu-item" href="#">
+			<div class="menu-title">MAP</div>
+			<div class="menu-desc">場内のご案内</div>
+		</a>
+		<div class="menu-item menu-event" id="eventMenu">
+			<div class="menu-title">EVENT</div>
+			<div class="menu-desc">イベント</div>
+			<span class="plusminus" id="eventPlusMinus">＋</span>
+		</div>
+		<a class="menu-link menu-item" href="#">
+			<div class="menu-title">TIME SCHEDULE</div>
+			<div class="menu-desc">タイムスケジュール</div>
+		</a>
+		<a class="menu-link menu-item" href="#">
+			<div class="menu-title">TICKET</div>
+			<div class="menu-desc">チケット</div>
+		</a>
+		<a class="menu-link menu-item" href="#">
+			<div class="menu-title">GOURMET</div>
+			<div class="menu-desc">グルメ</div>
+		</a>
+		<a class="menu-link menu-item" href="#">
+			<div class="menu-title">GOODS</div>
+			<div class="menu-desc">グッズ</div>
+		</a>
+		<a class="menu-link menu-item" href="#">
+			<div class="menu-title">OTHERS</div>
+			<div class="menu-desc">その他</div>
+		</a>
+		<!-- EVENTサブメニュー(プルダウン) -->
+		<div class="menu-dropdown" id="eventDropdown">
+			<div class="menu-dropdown-list">
+				<a class="menu-dropdown-link" href="#">ふれあいイベント</a>
+				<a class="menu-dropdown-link" href="#">グラウンドメインイベント</a>
+				<a class="menu-dropdown-link" href="#">お楽しみイベント</a>
+			</div>
+		</div>
+	</div>
+	<div class="menu-footer">
+		<a class="menu-footer-link" href="#" target="_blank" rel="noopener">
+			埼玉西武ライオンズ公式サイトへ
+		</a>
+	</div>
+</nav>
+	
 	<div id="PC">
 	<img id="aaa" src="images/aaa.png" srcset="images/aaa.png, aaa@2x.png">
 		

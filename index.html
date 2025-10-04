@@ -3687,50 +3687,6 @@
 		top: 71.918px;
 		transform: matrix(1,0,0,1,0,0);
 	}
-
-    /* ▼▼▼ ここからハンバーガーメニュー用のCSSを追加 ▼▼▼ */
-    .menu-btn {
-      position: fixed;
-      top: 32px;
-      right: 32px;
-      z-index: 2001;
-      width: 80px;
-      height: 80px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0;
-    }
-    /* ...（以降、ハンバーガーメニューで使用するCSSを全部）... */
-    /* ▲▲▲ ここまで ▲▲▲ */
-
-	html, body {
-  width: 100%;
-  height: 100%;
-  overflow-x: hidden;
-}
-
-.menu-drawer,
-.menu-overlay {
-  position: fixed !important;
-  top: 0;
-  left: 0;
-  height: 100vh;
-}
-
-.menu-drawer {
-  right: 0;
-  left: auto;
-  width: 90vw;
-  max-width: 600px;
-  z-index: 3000;
-}
-
-.menu-overlay {
-  width: 100vw;
-  z-index: 2999;
-}
-	
 </style>
 <script id="applicationScript">
 if (window.console==null) { window["console"] = { log : function() {} } }; // some browsers do not set console
@@ -6636,92 +6592,9 @@ var Application = function() {
 }
 
 window.application = new Application();
-	
 </script>
 </head>
-
-<!-- 既存の本体内容や既存の<script>など -->
-
-<!-- ▼▼▼ ハンバーガーメニュー用のJSをこの位置に追加 ▼▼▼ -->
-<script>
-const menuBtn = document.getElementById('menuBtn');
-const menuBtnImg = document.getElementById('menuBtnImg');
-const menuDrawer = document.getElementById('menuDrawer');
-const menuOverlay = document.getElementById('menuOverlay');
-const eventMenu = document.getElementById('eventMenu');
-const eventDropdown = document.getElementById('eventDropdown');
-const eventPlusMinus = document.getElementById('eventPlusMinus');
-let menuOpen = false;
-let eventOpen = false;
-menuBtn.addEventListener('click', () => {
-  menuOpen = !menuOpen;
-  menuDrawer.classList.toggle('active', menuOpen);
-  menuOverlay.classList.toggle('active', menuOpen);
-  menuBtnImg.src = menuOpen ? 'images/menu-close.png' : 'images/menu-open.png';
-  menuBtn.setAttribute('aria-label', menuOpen ? 'メニューを閉じる' : 'メニューを開く');
-  if (!menuOpen) {
-    eventOpen = false;
-    eventDropdown.classList.remove('active');
-    eventPlusMinus.textContent = '＋';
-  }
-});
-menuOverlay.addEventListener('click', () => {
-  menuOpen = false;
-  menuDrawer.classList.remove('active');
-  menuOverlay.classList.remove('active');
-  menuBtnImg.src = 'images/menu-open.png';
-  menuBtn.setAttribute('aria-label', 'メニューを開く');
-  eventOpen = false;
-  eventDropdown.classList.remove('active');
-  eventPlusMinus.textContent = '＋';
-});
-eventMenu.addEventListener('click', () => {
-  eventOpen = !eventOpen;
-  eventDropdown.classList.toggle('active', eventOpen);
-  eventPlusMinus.textContent = eventOpen ? '－' : '＋';
-});
-</script>
-</body>
-</html>
-	
 <body>
-<!-- ハンバーガーメニュー本体 -->
-<button class="menu-btn" id="menuBtn" aria-label="メニューを開く">
-  <img id="menuBtnImg" src="images/menu-open.png" alt="メニュー" />
-</button>
-<div class="menu-overlay" id="menuOverlay"></div>
-<nav class="menu-drawer" id="menuDrawer" aria-label="メニュー">
-  <div class="menu-list">
-    <a class="menu-link menu-item" href="#"><div class="menu-title">TOP</div><div class="menu-desc">トップページ</div></a>
-    <a class="menu-link menu-item" href="#"><div class="menu-title">INFOMATION</div><div class="menu-desc">お知らせ</div></a>
-    <a class="menu-link menu-item" href="#"><div class="menu-title">MEMBER</div><div class="menu-desc">参加選手一覧</div></a>
-    <a class="menu-link menu-item" href="#"><div class="menu-title">MAP</div><div class="menu-desc">場内のご案内</div></a>
-    <div class="menu-item menu-event" id="eventMenu">
-      <div class="menu-title">EVENT</div>
-      <div class="menu-desc">イベント</div>
-      <span class="plusminus" id="eventPlusMinus">＋</span>
-    </div>
-    <a class="menu-link menu-item" href="#"><div class="menu-title">TIME SCHEDULE</div><div class="menu-desc">タイムスケジュール</div></a>
-    <a class="menu-link menu-item" href="#"><div class="menu-title">TICKET</div><div class="menu-desc">チケット</div></a>
-    <a class="menu-link menu-item" href="#"><div class="menu-title">GOURMET</div><div class="menu-desc">グルメ</div></a>
-    <a class="menu-link menu-item" href="#"><div class="menu-title">GOODS</div><div class="menu-desc">グッズ</div></a>
-    <a class="menu-link menu-item" href="#"><div class="menu-title">OTHERS</div><div class="menu-desc">その他</div></a>
-    <!-- EVENTサブメニュー -->
-    <div class="menu-dropdown" id="eventDropdown">
-      <div class="menu-dropdown-list">
-        <a class="menu-dropdown-link" href="#">ふれあいイベント</a>
-        <a class="menu-dropdown-link" href="#">グラウンドメインイベント</a>
-        <a class="menu-dropdown-link" href="#">お楽しみイベント</a>
-      </div>
-    </div>
-  </div>
-  <div class="menu-footer">
-    <a class="menu-footer-link" href="#" target="_blank" rel="noopener">
-      埼玉西武ライオンズ公式サイトへ
-    </a>
-  </div>
-</nav>
-	
 	<div id="PC">
 	<img id="aaa" src="images/aaa.png" srcset="images/aaa.png, aaa@2x.png">
 		

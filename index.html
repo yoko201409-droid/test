@@ -6609,8 +6609,54 @@ var Application = function() {
 }
 
 window.application = new Application();
+	
 </script>
 </head>
+
+<!-- 既存の本体内容や既存の<script>など -->
+
+<!-- ▼▼▼ ハンバーガーメニュー用のJSをこの位置に追加 ▼▼▼ -->
+<script>
+const menuBtn = document.getElementById('menuBtn');
+const menuBtnImg = document.getElementById('menuBtnImg');
+const menuDrawer = document.getElementById('menuDrawer');
+const menuOverlay = document.getElementById('menuOverlay');
+const eventMenu = document.getElementById('eventMenu');
+const eventDropdown = document.getElementById('eventDropdown');
+const eventPlusMinus = document.getElementById('eventPlusMinus');
+let menuOpen = false;
+let eventOpen = false;
+menuBtn.addEventListener('click', () => {
+  menuOpen = !menuOpen;
+  menuDrawer.classList.toggle('active', menuOpen);
+  menuOverlay.classList.toggle('active', menuOpen);
+  menuBtnImg.src = menuOpen ? 'images/menu-close.png' : 'images/menu-open.png';
+  menuBtn.setAttribute('aria-label', menuOpen ? 'メニューを閉じる' : 'メニューを開く');
+  if (!menuOpen) {
+    eventOpen = false;
+    eventDropdown.classList.remove('active');
+    eventPlusMinus.textContent = '＋';
+  }
+});
+menuOverlay.addEventListener('click', () => {
+  menuOpen = false;
+  menuDrawer.classList.remove('active');
+  menuOverlay.classList.remove('active');
+  menuBtnImg.src = 'images/menu-open.png';
+  menuBtn.setAttribute('aria-label', 'メニューを開く');
+  eventOpen = false;
+  eventDropdown.classList.remove('active');
+  eventPlusMinus.textContent = '＋';
+});
+eventMenu.addEventListener('click', () => {
+  eventOpen = !eventOpen;
+  eventDropdown.classList.toggle('active', eventOpen);
+  eventPlusMinus.textContent = eventOpen ? '－' : '＋';
+});
+</script>
+</body>
+</html>
+	
 <body>
 <button class="menu-btn" id="menuBtn" aria-label="メニューを開く">
   <img id="menuBtnImg" src="images/menu-open.png" alt="メニュー" />

@@ -3703,6 +3703,33 @@
     }
     /* ...（以降、ハンバーガーメニューで使用するCSSを全部）... */
     /* ▲▲▲ ここまで ▲▲▲ */
+
+	html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+.menu-drawer,
+.menu-overlay {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  height: 100vh;
+}
+
+.menu-drawer {
+  right: 0;
+  left: auto;
+  width: 90vw;
+  max-width: 600px;
+  z-index: 3000;
+}
+
+.menu-overlay {
+  width: 100vw;
+  z-index: 2999;
+}
 	
 </style>
 <script id="applicationScript">

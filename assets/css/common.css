@@ -2684,9 +2684,9 @@ body .fix_section > ul > li:last-child > a {
   }
 
   body main .fv_section .fv_reo {
-      top: -23% !important;
+      top: -16% !important;
       z-index: 1;
-      width: 75% !important;
+      width: 65% !important;
   }
 
   body main .fv_section .fv_title {

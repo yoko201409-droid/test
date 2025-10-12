@@ -481,7 +481,7 @@ body main .fv_section {
   background-size: cover;
   background-repeat: no-repeat;
   filter: drop-shadow(5px 3px 6px rgba(0, 0, 0, 0.16));
-  height: 103vh;
+  height: 105vh;
   opacity: 0;
   transition: opacity 2s ease;
 }
@@ -2686,11 +2686,11 @@ body .fix_section > ul > li:last-child > a {
   body main .fv_section .fv_reo {
       top: -23% !important;
       z-index: 1;
-      width: 82% !important;
+      width: 75% !important;
   }
 
   body main .fv_section .fv_title {
-      top: -6% !important;
-      width: 95% !important;
+      top: -7% !important;
+      width: 90% !important;
   }
 }

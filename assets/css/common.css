@@ -2648,3 +2648,49 @@ body .fix_section > ul > li:last-child > a {
     font-size: 20px;
   }
 }
+
+/* ==========================
+   1920px以上のPC向け調整
+========================== */
+@media (min-width:1920px) {
+  body main .fv_section .fv_title {
+      top: 0% !important;
+      width: 95% !important;
+  }
+
+  body main .fv_section .fv_reo {
+      top: -15% !important;
+      z-index: 1;
+      width: 85% !important;
+  }
+}
+
+/* ==========================
+   2200px以上の超ワイド画面向け調整
+========================== */
+@media (min-width:2200px) {
+  body main .fv_section {
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+      background-image: url(../image/common/bg_fv_pc.png);
+      background-position: top center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      filter: drop-shadow(5px 3px 6px rgba(0, 0, 0, 0.16));
+      height: 103vh !important;
+      opacity: 0;
+      transition: opacity 2s ease;
+  }
+
+  body main .fv_section .fv_reo {
+      top: -23% !important;
+      z-index: 1;
+      width: 82% !important;
+  }
+
+  body main .fv_section .fv_title {
+      top: -6% !important;
+      width: 95% !important;
+  }
+}

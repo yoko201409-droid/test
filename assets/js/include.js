@@ -1,5 +1,4 @@
-// /assets/js/include.js  （fetch部分は今のままでOK）
-// 1) パーツ読み込み（既存）
+// ===== 1) パーツ読み込み =====
 (function () {
   document.querySelectorAll('[data-include]').forEach(async (el) => {
     const url = el.getAttribute('data-include');
@@ -15,65 +14,88 @@
   });
 })();
 
-// 2) 委譲でハンバーガー開閉（初期化いらず、安定）
-(function hookHamburgerDelegation(){
+// ===== 2) 参照キャッシュ =====
+let $panel = null, $header = null;
+function cacheHeaderNodes() {
+  $panel  = document.querySelector('.h_main_list');
+  $header = document.querySelector('header');
+}
+document.addEventListener('DOMContentLoaded', cacheHeaderNodes);
+document.addEventListener('partials:loaded', cacheHeaderNodes);
+
+// ===== 3) 開閉処理 =====
+function openMenu() {
+  if (!$panel) return;
+  requestAnimationFrame(() => {
+    $panel.classList.add('open');
+    document.body.classList.add('nav-open');
+  });
+}
+function closeMenu() {
+  if (!$panel) return;
+  requestAnimationFrame(() => {
+    $panel.classList.remove('open');
+    document.body.classList.remove('nav-open');
+  });
+}
+function toggleMenu() {
+  if (!$panel) return;
+  if ($panel.classList.contains('open')) closeMenu(); else openMenu();
+}
+function toggleSubMenu(anchorEl) {
+  const sub = anchorEl.parentElement?.nextElementSibling;
+  if (sub && sub.classList.contains('sub_list')) {
+    sub.classList.toggle('open');
+  }
+}
+
+// ===== 4) イベント委譲（iPhone最適化） =====
+(function bindDelegation(){
   if (window.__hamburgerDelegated) return;
   window.__hamburgerDelegated = true;
 
-  let tapLock = false;          // 連打ガード
-  const toggleClasses = () => {
-    const panel = document.querySelector('.h_main_list');
-    if (!panel) return;
-    panel.classList.toggle('open');
-    document.body.classList.toggle('nav-open');
-  };
+  let lastToggleAt = 0;
+  const GUARD_MS = 220; // ダブル発火・ダブルタップ対策
 
-  // クリック/タップの委譲
-  const onPress = (e) => {
-    const t = e.target.closest('.h_list_menu a, .h_menu a, .h_main_list li.down > a');
-    if (!t) return;
+  const pressHandler = (e) => {
+    const aOrBtn = e.target.closest('a,button');
+    if (!aOrBtn) return;
 
-    // メニュー開閉ボタン
-    if (t.matches('.h_list_menu a, .h_menu a')) {
-      e.preventDefault();
-      e.stopPropagation();                // 外側のクリック検知に届かせない
-      if (tapLock) return;
-      tapLock = true;
-      toggleClasses();
-      setTimeout(()=>{ tapLock = false; }, 200); // 200msの連打防止
+    const isMainToggle =
+      aOrBtn.closest('.h_list_menu') || aOrBtn.closest('.h_menu');
+
+    const isSubToggle =
+      aOrBtn.matches('.h_main_list li.down > a');
+
+    if (!isMainToggle && !isSubToggle) return;
+
+    const now = performance.now();
+    if (now - lastToggleAt < GUARD_MS) { e.preventDefault(); e.stopPropagation(); return; }
+    lastToggleAt = now;
+
+    e.preventDefault(); // iOSのダブルタップズーム/クリック遅延を抑止
+    e.stopPropagation();
+
+    if (isMainToggle) {
+      toggleMenu();
       return;
     }
-
-    // サブメニュー（EVENT）
-    if (t.matches('.h_main_list li.down > a')) {
-      e.preventDefault();
-      e.stopPropagation();
-      const sub = t.parentElement.nextElementSibling;
-      if (sub && sub.classList.contains('sub_list')) {
-        sub.classList.toggle('open');
-      }
+    if (isSubToggle) {
+      toggleSubMenu(aOrBtn);
       return;
     }
   };
 
-  // outside click で閉じる
-  const onOutside = (e) => {
-    const header = document.querySelector('header');
-    const panel = document.querySelector('.h_main_list');
-    if (!header || !panel) return;
-    if (!header.contains(e.target)) {
-      panel.classList.remove('open');
-      document.body.classList.remove('nav-open');
+  // iPhone優先: touchstart を capture で最速取得
+  document.addEventListener('touchstart', pressHandler, { capture: true, passive: false });
+  // 予備（PCなど）
+  document.addEventListener('click',       pressHandler, true);
+
+  // 外側タップで閉じる（受動でOK）
+  document.addEventListener('click', (e) => {
+    if (!$header || !$panel) return;
+    if (!$header.contains(e.target)) {
+      closeMenu();
     }
-  };
-
-  // PCクリック & モバイル（pointer）両対応
-  document.addEventListener('click', onPress, true);      // captureで確実に先取り
-  document.addEventListener('pointerup', onPress, true);
-  document.addEventListener('click', onOutside);          // 外側はバブリング側でOK
-
-  // パーツ差し込み後にも確実に生きる
-  document.addEventListener('partials:loaded', () => {
-    // 何もしなくてOK（委譲なので）
-  });
+  }, { passive: true });
 })();

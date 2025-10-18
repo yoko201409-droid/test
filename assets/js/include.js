@@ -1,6 +1,5 @@
-// /assets/js/include.js  ← JSのみ
-
-// 1) パーツを読み込む
+// /assets/js/include.js  （fetch部分は今のままでOK）
+// 1) パーツ読み込み（既存）
 (function () {
   document.querySelectorAll('[data-include]').forEach(async (el) => {
     const url = el.getAttribute('data-include');
@@ -8,8 +7,7 @@
       const res = await fetch(url, { credentials: 'same-origin', cache: 'no-cache' });
       if (!res.ok) throw new Error(res.status);
       const html = await res.text();
-      el.outerHTML = html; // ラッパーごと置換
-      // 挿入完了イベントを飛ばす（これに反応して初期化する）
+      el.outerHTML = html;
       document.dispatchEvent(new Event('partials:loaded'));
     } catch (e) {
       console.error('include failed:', url, e);
@@ -17,47 +15,65 @@
   });
 })();
 
-// 2) メニュー初期化（必要なときに呼ぶ関数）
-function initHeaderMenu(){
-  const panel = document.querySelector('.h_main_list');
-  const btns  = document.querySelectorAll('.h_list_menu a, .h_menu a');
+// 2) 委譲でハンバーガー開閉（初期化いらず、安定）
+(function hookHamburgerDelegation(){
+  if (window.__hamburgerDelegated) return;
+  window.__hamburgerDelegated = true;
 
-  if (!panel || btns.length === 0) return;
-
-  // 二重付与防止
-  if (panel.dataset.inited === '1') return;
-  panel.dataset.inited = '1';
-
-  const toggle = (e) => {
-    e.preventDefault();
-    panel.classList.toggle('open');            // テーマに合わせて必要ならクラス名変更
+  let tapLock = false;          // 連打ガード
+  const toggleClasses = () => {
+    const panel = document.querySelector('.h_main_list');
+    if (!panel) return;
+    panel.classList.toggle('open');
     document.body.classList.toggle('nav-open');
   };
 
-  btns.forEach((b) => b.addEventListener('click', toggle));
+  // クリック/タップの委譲
+  const onPress = (e) => {
+    const t = e.target.closest('.h_list_menu a, .h_menu a, .h_main_list li.down > a');
+    if (!t) return;
 
-  // サブメニュー（EVENT）
-  document.querySelectorAll('.h_main_list li.down > a').forEach((a) => {
-    a.addEventListener('click', (e) => {
+    // メニュー開閉ボタン
+    if (t.matches('.h_list_menu a, .h_menu a')) {
       e.preventDefault();
-      const sub = a.parentElement.nextElementSibling;
+      e.stopPropagation();                // 外側のクリック検知に届かせない
+      if (tapLock) return;
+      tapLock = true;
+      toggleClasses();
+      setTimeout(()=>{ tapLock = false; }, 200); // 200msの連打防止
+      return;
+    }
+
+    // サブメニュー（EVENT）
+    if (t.matches('.h_main_list li.down > a')) {
+      e.preventDefault();
+      e.stopPropagation();
+      const sub = t.parentElement.nextElementSibling;
       if (sub && sub.classList.contains('sub_list')) {
         sub.classList.toggle('open');
       }
-    });
-  });
+      return;
+    }
+  };
 
-  // 画面外クリックで閉じる（任意）
-  document.addEventListener('click', (e) => {
+  // outside click で閉じる
+  const onOutside = (e) => {
     const header = document.querySelector('header');
-    if (!header) return;
+    const panel = document.querySelector('.h_main_list');
+    if (!header || !panel) return;
     if (!header.contains(e.target)) {
       panel.classList.remove('open');
       document.body.classList.remove('nav-open');
     }
-  });
-}
+  };
 
-// 3) ヘッダー挿入後＆通常読込時の両方で初期化を呼ぶ
-document.addEventListener('partials:loaded', initHeaderMenu);
-document.addEventListener('DOMContentLoaded', initHeaderMenu);
+  // PCクリック & モバイル（pointer）両対応
+  document.addEventListener('click', onPress, true);      // captureで確実に先取り
+  document.addEventListener('pointerup', onPress, true);
+  document.addEventListener('click', onOutside);          // 外側はバブリング側でOK
+
+  // パーツ差し込み後にも確実に生きる
+  document.addEventListener('partials:loaded', () => {
+    // 何もしなくてOK（委譲なので）
+  });
+})();
